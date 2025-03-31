@@ -13,11 +13,12 @@ public struct Cat has key, store {
 
 // Challenge: make this function return the object instead of transfering it
 public fun new(name: String, color: String, ctx: &mut TxContext): Cat {
-    Cat {
+    let cat = Cat {
         id: object::new(ctx),
         name,
         color,
-    }
+    };
+    cat
 }
 
 public fun tchau(cat: Cat) {
