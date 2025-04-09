@@ -35,9 +35,10 @@ The package has been tested with:
 
 You can view the complete transaction history on [SuiScan](https://suiscan.xyz/testnet/account/0x0a094d9aceabdf55e16d3bee60bd16d6631e03ba3c8d47f66e3c4966d87806f4/activity).
 
-<img width="1385" alt="Screenshot 2025-04-09 at 17 19 00" src="https://github.com/user-attachments/assets/4841d340-298a-4de9-8131-13d34379c924" />
+<img width="1205" alt="Screenshot 2025-04-09 at 17 29 28" src="https://github.com/user-attachments/assets/e9a8dff5-b5db-4201-a5a3-61c004b22be6" />
 
 ## Example Commands
+
 
 ### Swap SUI for SIX
 ```bash
