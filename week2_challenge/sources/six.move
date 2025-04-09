@@ -1,140 +1,98 @@
-module six::six {
-    use sui::object::{Self, UID};
-    use sui::coin::{Self, TreasuryCap, Coin};
-    use sui::balance::{Self, Balance};
-    use sui::tx_context::{Self, TxContext};
-    use sui::transfer;
-    use sui::sui::SUI;
-    use std::option;
+module six::six;
 
-    /// Error codes
-    const ENotAdmin: u64 = 0;
-    const EInsufficientSUI: u64 = 1;
-    const EInsufficientTreasury: u64 = 2;
+use sui::coin::{Self, TreasuryCap, Coin};
+use sui::url;
+use sui::balance::{Self, Balance};
+use sui::sui::SUI;
+use sui::transfer;
+use sui::object::{Self, UID};
+use sui::tx_context::{Self, TxContext};
+use std::ascii;
 
-    /// Constants
-    const DECIMALS: u8 = 9;
-    const SWAP_FEE_PERCENT: u64 = 1; // 1% fee for swapping
-    const BURN_FEE_PERCENT: u64 = 20; // 20% fee for burning SIX to SUI
-    const SUI_TO_SIX_RATE: u64 = 1_000_000; // 1 SUI = 1,000,000 SIX
+public struct SIX has drop {}
 
-    /// Constants for the SIX coin
-    const MIN_SUI_AMOUNT: u64 = 1_000_000; // 0.001 SUI
+// Useful constants
+const SIX_PER_SUI: u64 = 1_000_000; // 1 SUI buys 1,000,000 SIX
+const FEE_BASIS_POINTS: u64 = 100; // 1% fee
 
-    /// The SIX token type. This is a one-time witness type.
-    public struct SIX has drop {}
+// Errors
+const EInsufficientSuiInPool: u64 = 1;
 
-    /// Capability allowing the bearer to mint and burn SIX tokens
-    public struct AdminCap has key, store {
-        id: UID
-    }
+public struct CoinManager has key, store {
+    id: UID,
+    treasury_cap: TreasuryCap<SIX>,
+    sui_pool: Balance<SUI>,
+    admin_address: address
+}
 
-    /// The treasury that holds SUI tokens and manages the swap
-    public struct Treasury has key, store {
-        id: UID,
-        balance: Balance<SUI>,
-        fees: Balance<SUI>
-    }
+fun init(witness: SIX, ctx: &mut TxContext) {
+    let decimals: u8 = 9;
+    let symbol: vector<u8> = b"SIX";
+    let name: vector<u8> = b"SIX Token";
+    let description: vector<u8> = b"A simple test token";
+    let icon = url::new_unsafe(ascii::string(b"https://six.com"));
+    let (treasury_cap, metadata) = coin::create_currency<SIX>(
+        witness,
+        decimals,
+        symbol,
+        name,
+        description,
+        option::some(icon),
+        ctx
+    );
 
-    /// Initialize the SIX token and create the treasury
-    fun init(witness: SIX, ctx: &mut TxContext) {
-        let (treasury_cap, metadata) = coin::create_currency(
-            witness,
-            DECIMALS,
-            b"SIX",
-            b"SIX Token",
-            b"",
-            option::none(),
-            ctx
-        );
-        transfer::public_freeze_object(metadata);
-        transfer::public_transfer(treasury_cap, tx_context::sender(ctx));
+    let manager = CoinManager {
+        id: object::new(ctx),
+        treasury_cap: treasury_cap,
+        sui_pool: balance::zero<SUI>(),
+        admin_address: ctx.sender()
+    };
 
-        let treasury = Treasury {
-            id: object::new(ctx),
-            balance: balance::zero(),
-            fees: balance::zero()
-        };
-        transfer::share_object(treasury);
+    transfer::public_freeze_object(metadata);
+    transfer::public_share_object(manager);
+}
 
-        let admin_cap = AdminCap {
-            id: object::new(ctx)
-        };
-        transfer::transfer(admin_cap, tx_context::sender(ctx));
-    }
+public fun swap_sui_for_six(
+    manager: &mut CoinManager,
+    sui_coin: Coin<SUI>,
+    ctx: &mut TxContext
+) {
+    let sui_value = coin::value(&sui_coin);
+    let sui_fee = sui_value * FEE_BASIS_POINTS / 10000;
+    let sui_value_after_fee = sui_value - sui_fee;
+    let six_to_mint = sui_value_after_fee * SIX_PER_SUI;
 
-    /// Calculate the amount of SIX tokens to mint based on SUI input
-    public fun calculate_six_amount(sui_amount: u64): u64 {
-        sui_amount * SUI_TO_SIX_RATE
-    }
+    let new_six = coin::mint(&mut manager.treasury_cap, six_to_mint, ctx);
 
-    /// Calculate the amount of SUI to return based on SIX input
-    public fun calculate_sui_amount(six_amount: u64): u64 {
-        six_amount / SUI_TO_SIX_RATE
-    }
+    let mut sui_balance = coin::into_balance(sui_coin);
+    let fee_balance = balance::split(&mut sui_balance, sui_fee);
+    let fee_coin = coin::from_balance(fee_balance, ctx);
+    transfer::public_transfer(fee_coin, manager.admin_address);
 
-    /// Swap SUI for SIX tokens
-    public entry fun swap_for_six(
-        treasury_cap: &mut TreasuryCap<SIX>,
-        treasury: &mut Treasury,
-        sui_coin: Coin<SUI>,
-        ctx: &mut TxContext
-    ) {
-        let sui_amount = coin::value(&sui_coin);
-        assert!(sui_amount > 0, EInsufficientSUI);
+    balance::join(&mut manager.sui_pool, sui_balance);
+    transfer::public_transfer(new_six, ctx.sender());
+}
 
-        let fee = sui_amount * SWAP_FEE_PERCENT / 100;
-        let swap_amount = sui_amount - fee;
+public fun burn_six_for_sui(
+    manager: &mut CoinManager,
+    six_to_burn: Coin<SIX>,
+    ctx: &mut TxContext
+) {
+    let six_value = coin::value(&six_to_burn);
+    let sui_to_return = six_value / SIX_PER_SUI;
+    assert!(balance::value(&manager.sui_pool) >= sui_to_return, EInsufficientSuiInPool);
 
-        let six_amount = calculate_six_amount(swap_amount);
-        let six_coin = coin::mint(treasury_cap, six_amount, ctx);
+    coin::burn(&mut manager.treasury_cap, six_to_burn);
 
-        let mut sui_balance = coin::into_balance(sui_coin);
-        balance::join(&mut treasury.balance, balance::split(&mut sui_balance, swap_amount));
-        balance::join(&mut treasury.fees, sui_balance);
+    let sui_fee = sui_to_return * FEE_BASIS_POINTS / 10000;
+    let gross_sui_balance = balance::split(&mut manager.sui_pool, sui_to_return);
+    let mut gross_sui_coin = coin::from_balance(gross_sui_balance, ctx);
+    let fee_coin = coin::split(&mut gross_sui_coin, sui_fee, ctx);
+    transfer::public_transfer(fee_coin, manager.admin_address);
+    transfer::public_transfer(gross_sui_coin, ctx.sender());
+}
 
-        transfer::public_transfer(six_coin, tx_context::sender(ctx))
-    }
-
-    /// Burn SIX tokens to get SUI back
-    public entry fun burn_six_for_sui(
-        treasury_cap: &mut TreasuryCap<SIX>,
-        treasury: &mut Treasury,
-        six_coin: Coin<SIX>,
-        ctx: &mut TxContext
-    ) {
-        let six_amount = coin::value(&six_coin);
-        assert!(six_amount > 0, EInsufficientSUI);
-
-        let sui_amount = calculate_sui_amount(six_amount);
-        assert!(balance::value(&treasury.balance) >= sui_amount, EInsufficientTreasury);
-
-        // Calculate fee (20% of the SUI amount)
-        let fee = sui_amount * BURN_FEE_PERCENT / 100;
-        let return_amount = sui_amount - fee;
-
-        coin::burn(treasury_cap, six_coin);
-        
-        // Split the SUI into return amount and fee
-        let return_coin = coin::from_balance(balance::split(&mut treasury.balance, return_amount), ctx);
-        balance::join(&mut treasury.fees, balance::split(&mut treasury.balance, fee));
-        
-        transfer::public_transfer(return_coin, tx_context::sender(ctx))
-    }
-
-    /// Withdraw accumulated fees (admin only)
-    public entry fun withdraw_fees(
-        _admin_cap: &AdminCap,
-        treasury: &mut Treasury,
-        ctx: &mut TxContext
-    ) {
-        let amount = balance::value(&treasury.fees);
-        let sui_coin = coin::from_balance(balance::split(&mut treasury.fees, amount), ctx);
-        transfer::public_transfer(sui_coin, tx_context::sender(ctx))
-    }
-
-    #[test_only]
-    public fun init_for_testing(ctx: &mut TxContext) {
-        init(SIX {}, ctx)
-    }
-} 
+#[test_only]
+public fun test_init(ctx: &mut TxContext) {
+    init(SIX {}, ctx);
+}
