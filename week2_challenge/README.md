@@ -16,11 +16,6 @@ A simple token package that allows users to:
 ## Gas Requirements
 - Simple transactions (swaps, burns): 10,000,000 MIST (0.01 SUI)
 
-## Security Notes
-- The CoinManager object is shared and can be accessed by anyone
-- All operations are protected by appropriate checks
-- Fees are automatically deducted and stored in the CoinManager
-
 ## Testing
 The package has been tested with:
 1. Unit tests (`sui move test`)
@@ -120,7 +115,7 @@ sui client call --function burn_six_for_sui --module six --package <PACKAGE_ID> 
 
 Only the admin (holder of the `AdminCap`) can withdraw accumulated fees from both:
 - Swap operations (1% fee)
-- Burn operations (20% fee)
+- Burn operations (1% fee)
 
 ```bash
 sui client call --function withdraw_fees --module six --package <PACKAGE_ID> --args <ADMIN_CAP_ID> <TREASURY_ID> --gas-budget 10000000
@@ -140,7 +135,7 @@ The fees are automatically transferred to the admin's address.
 
 The package includes comprehensive tests that verify:
 - Token swapping functionality
-- Fee calculations (1% for swaps, 20% for burns)
+- Fee calculations (1% for swaps, 1% for burns)
 - Admin fee withdrawal
 - Error handling for invalid operations
 
@@ -154,10 +149,3 @@ sui move test
 - Minimum swap: `0.001 SUI`
 - Gas budget: `10,000,000 MIST` (~0.01 SUI)
 - Always double-check your object IDs before transactions
-
-## Security Best Practices
-
-1. Keep AdminCap and TreasuryCap safe
-2. Never share your private keys
-3. Validate object types with `sui client objects`
-4. Monitor balances and test before production use
