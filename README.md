@@ -76,7 +76,3 @@ sui move build
 - Advanced metadata and attributes
 - Batch minting capability
 - Enhanced admin controls
-
----
-
-Created by [Your Name] for the Lisbon Bootcamp Week 5 Challenge
