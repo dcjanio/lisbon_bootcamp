@@ -28,7 +28,9 @@ The project consists of two main components:
 - Features a clean, responsive UI with Radix UI components
 - Includes state management with TanStack Query
 
-  <img width="726" alt="Screenshot 2025-05-14 at 23 45 57" src="https://github.com/user-attachments/assets/96183d66-1bf3-4eac-8311-89a507156e2f" />
+ <img width="742" alt="Screenshot 2025-05-15 at 00 11 29" src="https://github.com/user-attachments/assets/3f028d48-c5d1-4268-a7c2-8cbb3cd00bbb" />
+<img width="1356" alt="Screenshot 2025-05-15 at 00 11 52" src="https://github.com/user-attachments/assets/a8c9bf64-29c1-41ca-bb81-47b60b6b1998" />
+
 
 ### Smart Contract (dropout_nft)
 
