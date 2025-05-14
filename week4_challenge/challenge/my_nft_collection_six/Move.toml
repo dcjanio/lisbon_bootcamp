@@ -1,0 +1,11 @@
+[package]
+name = "my_nft_collection_six"
+version = "0.0.1"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/devnet" }
+
+[addresses]
+my_nft_collection_six = "0x0"
+six = "0x0"
+sui = "0x2" 

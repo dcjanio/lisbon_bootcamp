@@ -1,0 +1,16 @@
+{
+  "name": "six-nft-collection-sdk",
+  "version": "1.0.0",
+  "description": "SDK for interacting with the SIX NFT Collection",
+  "main": "add_creator_field.js",
+  "type": "module",
+  "scripts": {
+    "add-creator": "node add_creator_field.js"
+  },
+  "dependencies": {
+    "@mysten/sui.js": "^0.41.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 
