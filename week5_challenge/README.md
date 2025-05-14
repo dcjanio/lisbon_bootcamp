@@ -1,14 +1,14 @@
-# Challenge Week 5 - Dropout NFT Minter
+# Challenge Week 5 - Mint/Burn NFTs
 
-This project is a solution for the Lisbon Bootcamp Week 5 Challenge. It demonstrates a full-stack decentralized application for minting NFTs on the Sui blockchain.
+This project is a solution for the Lisbon Bootcamp Week 5 Challenge. It demonstrates a full-stack decentralized application for minting and burning NFTs on the Sui blockchain.
 
-![Dropout NFT Minter](https://i.imgur.com/yvNbUed.png)
+![Mint/Burn NFTs App](https://i.imgur.com/yvNbUed.png)
 
 ## Project Overview
 
 The project consists of two main components:
 
-1. **Smart Contract** - A custom Move contract for the Dropout NFT collection
+1. **Smart Contract** - A custom Move contract for the NFT collection
 2. **Frontend Application** - A React-based UI for interacting with the contract
 
 ## Features
@@ -29,7 +29,7 @@ The project consists of two main components:
 - Features a clean, responsive UI with Radix UI components
 - Includes state management with TanStack Query
 
-<img width="726" alt="Screenshot 2025-05-14 at 23 45 57" src="https://github.com/user-attachments/assets/96183d66-1bf3-4eac-8311-89a507156e2f" />
+<img width="726" alt="Screenshot of Mint/Burn NFTs App" src="https://github.com/user-attachments/assets/96183d66-1bf3-4eac-8311-89a507156e2f" />
 
 ### Smart Contract (dropout_nft)
 
@@ -49,7 +49,7 @@ pnpm install
 pnpm run dev
 ```
 
-Visit the URL shown in the terminal (typically http://localhost:5177/)
+Visit the URL shown in the terminal (typically http://localhost:5178/)
 
 ### Exploring the Smart Contract
 
@@ -67,7 +67,7 @@ sui client publish --gas-budget 200000000
 ## Solution Approach
 
 1. Developed a minimal yet feature-complete NFT smart contract
-2. Created a modern UI for a seamless minting experience
+2. Created a modern UI for a seamless minting and burning experience
 3. Implemented dual payment options (SUI or SIX tokens)
 4. Added proper error handling and user feedback
 5. Ensured proper NFT display with metadata
