@@ -1,9 +1,10 @@
 import { useCurrentAccount, useSuiClientQuery } from "@mysten/dapp-kit";
 import { formatAddress } from "@mysten/sui/utils";
 import { Box, Card, Flex, Grid, Heading, Link, Text } from "@radix-ui/themes";
+import { BurnNFTButton } from "./BurnNFTButton";
 
-// Using the same package ID from our deployed contract
-const PACKAGE_ID = "0x49c91084cf01f6fbe451ffc1b029e90bc208ac5569b57c2e4b01e5d2d1f05c40";
+// Using the newly deployed package ID
+const PACKAGE_ID = "0x9e6ff5ba2d519ffd3c6de890343fa1c3f2e8354a8cd4f216704a6c494354c492";
 
 export function OwnedObjects() {
   const account = useCurrentAccount();
@@ -78,7 +79,7 @@ export function OwnedObjects() {
             </Box>
             <Box p="3">
               <Heading size="4" mb="1">{display.name}</Heading>
-              <Flex align="center" gap="1">
+              <Flex align="center" gap="1" mb="2">
                 <Box style={{ 
                   backgroundColor: '#10b981', 
                   width: '8px', 
@@ -95,6 +96,11 @@ export function OwnedObjects() {
                   {formatAddress(object.data!.objectId)}
                 </Link>
               </Flex>
+              
+              <BurnNFTButton 
+                objectId={object.data!.objectId} 
+                name={display.name} 
+              />
             </Box>
           </Card>
         );

@@ -38,6 +38,12 @@ module dropout_nft::dropout {
         image_url: String,
     }
 
+    struct NFTBurned has copy, drop {
+        nft_id: ID,
+        owner: address,
+        name: String,
+    }
+
     // ===== Constants =====
     
     // One-time witness with the correct name format (uppercase module name)
@@ -139,6 +145,25 @@ module dropout_nft::dropout {
     ) {
         let nft = buy(collection, name, image_url, payment, clock, ctx);
         transfer::public_transfer(nft, tx_context::sender(ctx));
+    }
+
+    /// Burn an NFT - can only be called by the owner
+    public entry fun burn(
+        nft: Dropout,
+        ctx: &mut TxContext
+    ) {
+        // Destructure the NFT
+        let Dropout { id, name, image_url: _, created_at: _ } = nft;
+        
+        // Emit burn event
+        event::emit(NFTBurned {
+            nft_id: object::uid_to_inner(&id),
+            owner: tx_context::sender(ctx),
+            name,
+        });
+        
+        // Delete the NFT object
+        object::delete(id);
     }
 
     // ===== Getters =====

@@ -10,8 +10,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 // Contract addresses from our newly deployed package
-const PACKAGE_ID = "0x49c91084cf01f6fbe451ffc1b029e90bc208ac5569b57c2e4b01e5d2d1f05c40";
-const COLLECTION_ID = "0x84fd6471cf756c054385b7fa57abaf7b66c6e993540fd115701ad8556ee8e893";
+const PACKAGE_ID = "0x9e6ff5ba2d519ffd3c6de890343fa1c3f2e8354a8cd4f216704a6c494354c492";
+const COLLECTION_ID = "0x12c868681d1178a0873baf5b1f4a8da0f7e641f3a7acbd971642446ede093e50";
 
 // Payment token options
 const PAYMENT_TOKENS = {
