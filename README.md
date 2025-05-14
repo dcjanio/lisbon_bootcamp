@@ -29,8 +29,6 @@ The project consists of two main components:
 - Includes state management with TanStack Query
 
   <img width="726" alt="Screenshot 2025-05-14 at 23 45 57" src="https://github.com/user-attachments/assets/96183d66-1bf3-4eac-8311-89a507156e2f" />
-<img width="959" alt="Screenshot 2025-05-14 at 23 41 19" src="https://github.com/user-attachments/assets/75ea1d2b-9432-4468-9b6c-a410d4d1c1d5" />
-
 
 ### Smart Contract (dropout_nft)
 
