@@ -1,24 +1,21 @@
-# Challenge Week 5 - Mint/Burn NFTs
+# Challenge Week 5 - Sui To-Do List App
 
-This project is a solution for the Lisbon Bootcamp Week 5 Challenge. It demonstrates a full-stack decentralized application for minting and burning NFTs on the Sui blockchain.
-
-![Mint/Burn NFTs App](https://i.imgur.com/yvNbUed.png)
+This project is a solution for the Lisbon Bootcamp Week 5 Challenge. It demonstrates a full-stack decentralized application for managing to-do items on the Sui blockchain.
 
 ## Project Overview
 
 The project consists of two main components:
 
-1. **Smart Contract** - A custom Move contract for the NFT collection
+1. **Smart Contract** - A custom Move contract for the to-do list collection
 2. **Frontend Application** - A React-based UI for interacting with the contract
 
 ## Features
 
 - **Connect Wallet**: Integration with Slush Wallet
-- **View Balances**: Display token balances (SUI, SIX, etc.)
-- **Mint NFTs**: Create NFTs with custom names and images
-- **Flexible Payments**: Pay with either SUI or SIX tokens
-- **NFT Gallery**: View your NFT collection in a responsive layout
-- **Burn NFTs**: Delete unwanted NFTs from your collection
+- **Add Tasks**: Create new to-do items with descriptions and priorities
+- **Task Management**: Mark tasks as complete or delete them
+- **Task List**: View all your tasks in a responsive layout
+- **Persistence**: Store your tasks securely on the Sui blockchain
 
 ## Technical Implementation
 
@@ -29,15 +26,12 @@ The project consists of two main components:
 - Features a clean, responsive UI with Radix UI components
 - Includes state management with TanStack Query
 
-<img width="726" alt="Screenshot of Mint/Burn NFTs App" src="https://github.com/user-attachments/assets/96183d66-1bf3-4eac-8311-89a507156e2f" />
-
-### Smart Contract (dropout_nft)
+### Smart Contract (todo_list)
 
 - Written in Move language for the Sui blockchain
-- Implements a shared collection object for tracking NFTs
-- Supports generic payment tokens with type parameters
-- Includes display configuration for NFT rendering in wallets
-- Features burn functionality for NFT deletion
+- Implements a shared collection object for tracking to-do items
+- Supports creating, completing, and deleting tasks
+- Includes metadata for task details (description, status, priority)
 
 ## Getting Started
 
@@ -53,33 +47,28 @@ Visit the URL shown in the terminal (typically http://localhost:5178/)
 
 ### Exploring the Smart Contract
 
-The contract is deployed on Sui devnet at:
-- Package ID: `0x9e6ff5ba2d519ffd3c6de890343fa1c3f2e8354a8cd4f216704a6c494354c492`
-- Collection ID: `0x12c868681d1178a0873baf5b1f4a8da0f7e641f3a7acbd971642446ede093e50`
-
-To view and modify the contract:
+The contract is deployed on Sui devnet. To view and modify the contract:
 ```bash
-cd dropout_nft
+cd todo_list
 sui move build
 sui client publish --gas-budget 200000000
 ```
 
 ## Solution Approach
 
-1. Developed a minimal yet feature-complete NFT smart contract
-2. Created a modern UI for a seamless minting and burning experience
-3. Implemented dual payment options (SUI or SIX tokens)
+1. Developed a simple yet full-featured to-do list smart contract
+2. Created a modern UI for a seamless task management experience
+3. Implemented functionality to add, complete and delete tasks
 4. Added proper error handling and user feedback
-5. Ensured proper NFT display with metadata
-6. Implemented NFT burn functionality for full lifecycle management
+5. Ensured data persistence on the blockchain
 
 ## Future Enhancements
 
-- NFT trading functionality
-- Collection royalties
-- Advanced metadata and attributes
-- Batch minting capability
-- Enhanced admin controls
+- Task categories and labels
+- Due dates and reminders
+- Task priorities
+- Sharing tasks with other users
+- Task attachments
 
 ---
 

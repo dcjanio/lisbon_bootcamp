@@ -1,9 +1,9 @@
 import { ConnectButton } from "@mysten/dapp-kit";
-import { Box, Container, Flex, Heading, Text, Separator } from "@radix-ui/themes";
+import { Box, Container, Flex, Heading, Text } from "@radix-ui/themes";
 import { WalletStatus } from "./WalletStatus";
 import { Balances } from "./Balances";
-import { OwnedObjects } from "./OwnedObjects";
-import { MintNFTForm } from "./MintNFTForm";
+import { TaskList } from "./TaskList";
+import { CreateTaskForm } from "./CreateTaskForm";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 
 function App() {
@@ -13,58 +13,81 @@ function App() {
     <Container size="3">
       <Flex direction="column" gap="5" p="5">
         <Box mb="4">
-          <Heading size="8" mb="2">Dropout NFT Minter</Heading>
-          <Text size="2" color="gray">Connect your wallet to mint exclusive Dropout NFTs on Sui</Text>
+          <Heading size="8" mb="2" style={{ background: 'linear-gradient(to right, #3a86ff, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Sui Task NFTs
+          </Heading>
+          <Text size="2" color="gray">Mint, complete and burn your tasks as NFTs on the Sui blockchain</Text>
         </Box>
         
-        <Flex justify="end">
+        <Flex justify="end" mb="2">
           <ConnectButton />
         </Flex>
         
         {account && (
-          <>
-            <Box p="4" style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderRadius: '8px' }}>
-              <WalletStatus />
+          <Flex direction="column" gap="5">
+            <WalletStatus />
+            
+            <Balances />
+            
+            <Box style={{ 
+              backgroundColor: 'rgba(0,0,0,0.1)', 
+              borderRadius: '8px',
+              padding: '16px',
+              border: '1px solid rgba(255,255,255,0.05)'
+            }}>
+              <Heading size="5" mb="3">Mint a New Task NFT</Heading>
+              <Text size="2" mb="3" color="gray">Create a new task as an NFT on the Sui blockchain</Text>
+              <CreateTaskForm />
             </Box>
             
-            <Separator size="4" />
-            
-            <Box>
-              <Heading size="5" mb="3">Your Balances</Heading>
-              <Balances />
+            <Box style={{ 
+              backgroundColor: 'rgba(0,0,0,0.1)', 
+              borderRadius: '8px',
+              padding: '16px',
+              border: '1px solid rgba(255,255,255,0.05)'
+            }}>
+              <Heading size="5" mb="3">Your Task NFTs</Heading>
+              <TaskList />
             </Box>
-            
-            <Separator size="4" />
-            
-            <Box>
-              <Heading size="5" mb="3">Mint a New Dropout NFT</Heading>
-              <Text size="2" mb="3" color="gray">Create your personalized Dropout NFT with SUI or SIX tokens</Text>
-              <MintNFTForm />
-            </Box>
-            
-            <Separator size="4" />
-            
-            <Box>
-              <Heading size="5" mb="3">Your Dropout NFT Collection</Heading>
-              <OwnedObjects />
-            </Box>
-          </>
+          </Flex>
         )}
         
         {!account && (
           <Box 
             p="6" 
             style={{ 
-              backgroundColor: 'rgba(0,0,0,0.2)', 
-              borderRadius: '8px', 
+              backgroundColor: 'rgba(0,0,0,0.1)', 
+              borderRadius: '10px', 
               textAlign: 'center',
-              marginTop: '40px'
+              marginTop: '40px',
+              border: '1px solid rgba(255,255,255,0.05)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
             }}
           >
-            <Heading size="6" mb="3">👋 Welcome to Dropout NFT Minter</Heading>
-            <Text mb="4">Please connect your Slush Wallet to get started</Text>
+            <div style={{
+              width: '80px',
+              height: '80px',
+              margin: '0 auto 24px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(58, 134, 255, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '40px'
+            }}>
+              🖼️
+            </div>
+            <Heading size="6" mb="3">Welcome to Sui Task NFTs</Heading>
+            <Text mb="4">Connect your wallet to start minting task NFTs</Text>
+            <Box style={{ marginTop: '20px' }}>
+              <ConnectButton />
+            </Box>
           </Box>
         )}
+        
+        <Box style={{ textAlign: 'center', marginTop: '40px' }}>
+          <Text size="1" color="gray">Created for the Lisbon Bootcamp Week 5 Challenge</Text>
+        </Box>
       </Flex>
     </Container>
   );

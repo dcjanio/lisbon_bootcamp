@@ -25,47 +25,52 @@ export const Balances = () => {
     return <Text color="red">Error fetching balances</Text>;
   }
 
-  if (!data || data.length === 0) {
-    return <Text color="gray">No coins found in this wallet</Text>;
-  }
+  // Find SUI coin data
+  const suiCoin = data?.find(coin => 
+    coin.coinType === "0x2::sui::SUI"
+  );
 
-  const formatCoinName = (coinType: string) => {
-    const shortName = formatAddress(coinType);
-    // Extract coin name from the end of the coinType
-    const parts = coinType.split("::");
-    if (parts.length > 2) {
-      return parts[2];
-    }
-    return shortName;
-  };
-
-  const formatBalance = (balance: string) => {
-    const num = parseInt(balance);
-    if (num >= 1_000_000_000) {
-      return (num / 1_000_000_000).toFixed(2) + " B";
-    }
-    if (num >= 1_000_000) {
-      return (num / 1_000_000).toFixed(2) + " M";
-    }
-    if (num >= 1_000) {
-      return (num / 1_000).toFixed(2) + " K";
-    }
-    return num.toString();
-  };
-
+  // Always show 0 SUI regardless of actual balance
   return (
-    <Flex direction="column" gap="2">
-      {data?.map(({ totalBalance, coinType }) => (
-        <Card key={coinType} style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}>
-          <Flex p="3" justify="between" align="center">
-            <Box>
-              <Text weight="bold">{formatCoinName(coinType)}</Text>
-              <Text size="1" color="gray">{formatAddress(coinType)}</Text>
-            </Box>
-            <Text size="5" weight="medium">{formatBalance(totalBalance)}</Text>
-          </Flex>
-        </Card>
-      ))}
-    </Flex>
+    <Card style={{ 
+      backgroundColor: 'rgba(0,0,0,0.1)', 
+      borderRadius: '8px',
+      overflow: 'hidden',
+      border: '1px solid rgba(255,255,255,0.05)'
+    }}>
+      <Flex p="4" justify="between" align="center">
+        <Flex align="center" gap="3">
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(28, 70, 193, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '18px'
+          }}>
+            S
+          </div>
+          <Box>
+            <Text weight="bold" size="4">SUI</Text>
+            <Text size="1" color="gray">{formatAddress("0x2::sui::SUI")}</Text>
+          </Box>
+        </Flex>
+        <Flex direction="column" align="end">
+          <Text size="5" weight="medium">0 SUI</Text>
+          <Text size="1" color="gray">Demo Balance</Text>
+        </Flex>
+      </Flex>
+      <Box style={{ 
+        backgroundColor: 'rgba(28, 70, 193, 0.1)', 
+        padding: '12px',
+        borderTop: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        <Text size="2" style={{ textAlign: 'center' }}>
+          This is a demo app - no actual SUI is required for transactions
+        </Text>
+      </Box>
+    </Card>
   );
 };
