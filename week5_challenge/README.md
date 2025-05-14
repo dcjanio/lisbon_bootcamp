@@ -49,7 +49,7 @@ pnpm install
 pnpm run dev
 ```
 
-Visit the URL shown in the terminal (typically http://localhost:5173/)
+Visit the URL shown in the terminal (typically http://localhost:5177/)
 
 ### Exploring the Smart Contract
 
@@ -61,6 +61,7 @@ To view and modify the contract:
 ```bash
 cd dropout_nft
 sui move build
+sui client publish --gas-budget 200000000
 ```
 
 ## Solution Approach
